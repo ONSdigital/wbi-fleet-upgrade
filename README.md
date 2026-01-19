@@ -13,69 +13,6 @@ You can upgrade entire fleets of instances across multiple locations, or
 target one specific instance. It also supports rolling back recently
 upgraded instances to their previous version.
 
-## Quick Start
-
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Upgrade All Instances (Fleet Mode)
-
-```bash
-python3 main.py \
-  --project <project-id> \
-  --locations europe-west2-a europe-west2-b \
-  --dry-run
-```
-
-### Upgrade One Instance (Single Instance Mode)
-
-```bash
-python3 main.py \
-  --project <project-id> \
-  --locations europe-west2-a \
-  --instance my-notebook \
-  --dry-run
-```
-
-### Roll Back All Eligible Instances (Fleet Rollback)
-
-```bash
-python3 main.py \
-  --project <project-id> \
-  --locations europe-west2-a europe-west2-b \
-  --rollback \
-  --dry-run
-```
-
-### Roll Back One Instance (Single Instance Rollback)
-
-```bash
-python3 main.py \
-  --project <project-id> \
-  --locations europe-west2-a \
-  --instance my-notebook \
-  --rollback
-```
-
-### Use the Bash Wrappers
-
-```bash
-# Upgrade wrapper
-./wb-upgrade.sh \
-  --project <project-id> \
-  --locations "europe-west2-a europe-west2-b" \
-  --dry-run
-
-# Rollback wrapper
-./wb-rollback.sh \
-  --project <project-id> \
-  --locations "europe-west2-a europe-west2-b" \
-  --dry-run
-```
-
 ## Main Features
 
 - ✅ **Fleet Upgrades**: Upgrade all instances in specified
@@ -96,31 +33,71 @@ python3 main.py \
   instances are started in parallel before eligibility checks and
   rollback operations
 
-## How to Use It
+## Quick Start
 
-### Basic Commands
+**If your Vertex AI Workbench instance is deployed using Terraform
+with environment version pinning enabled, you must update the pinned
+environment version to the latest supported version when performing
+a native instance upgrade.**
+
+**If the version pin is not updated, subsequent Terraform runs will
+detect a version mismatch between the configuration and the instance
+state and will attempt to recreate the Workbench instance to reconcile
+the tfstate with the pinned version.**
+
+### Clone the Repository
 
 ```bash
-# Check which instances need upgrading (dry run)
-python3 main.py --project <project-id> --locations LOCATION --dry-run
+git clone git@github.com:ONSdigital/wbi-fleet-upgrade.git
+cd wbi-fleet-upgrade
+```
 
-# Upgrade all instances in a location
-python3 main.py --project <project-id> --locations LOCATION
+### Set Your Project
 
-# Upgrade one specific instance
-python3 main.py --project <project-id> --locations LOCATION --instance INSTANCE_ID
+```bash
+gcloud config set project <project-id>
+```
 
-# Upgrade with automatic rollback on failure
-python3 main.py --project <project-id> --locations LOCATION \
-  --rollback-on-failure
+### Authenticate with GCP
 
-# Check rollback eligibility for all instances (dry run)
-python3 main.py --project <project-id> --locations LOCATION \
-  --rollback --dry-run
+```bash
+gcloud auth login # For CLI tool permission to manage your cloud resources
+gcloud auth application-default login # For permission to call Google APIs
+```
 
-# Roll back one instance to previous version
-python3 main.py --project <project-id> --locations LOCATION \
-  --instance INSTANCE_ID --rollback
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Use the Bash Wrappers
+
+### Upgrade wrapper
+
+```bash
+./wb-upgrade.sh \
+  --project <project-id> \
+  --locations "europe-west2-a europe-west2-b" \
+  --dry-run
+```
+
+### Rollback wrapper
+
+```bash
+./wb-rollback.sh \
+  --project <project-id> \
+  --locations "europe-west2-a europe-west2-b" \
+  --dry-run
+```
+
+### Use Python Directly (CLI)
+
+```bash
+python3 main.py \
+  --project <project-id> \
+  --locations europe-west2-a europe-west2-b \
+  --dry-run
 ```
 
 ### All Options
@@ -293,11 +270,9 @@ export LOCATIONS="europe-west2-a europe-west2-b"
 
 #### Rollback Not Available
 
-```bash
-# Check upgrade history for the instance
-# Ensure a recent successful upgrade exists
-# Confirm snapshot/previous version is available
-```
+- Check upgrade history for the instance
+- Ensure a recent successful upgrade exists
+- Confirm snapshot/previous version is available
 
 #### Permission Denied
 
@@ -311,10 +286,8 @@ gcloud projects describe PROJECT_ID
 
 #### Instance Busy or Not Running
 
-```bash
-# Ensure instance is ACTIVE
-# Wait for ongoing operations to finish (UPGRADING/STARTING/STOPPING)
-```
+- Ensure instance is ACTIVE
+- Wait for ongoing operations to finish (UPGRADING/STARTING/STOPPING)
 
 ## Development
 
@@ -324,8 +297,8 @@ gcloud projects describe PROJECT_ID
 # Run all tests
 pytest tests/ -v
 
-# Run with coverage
-pytest tests/ --cov=fleet_upgrader --cov-report=html
+# Run with coverage (requires dev deps, e.g. pytest-cov)
+pytest tests/ -v --cov=src --cov-report=term-missing --cov-branch
 ```
 
 ## Requirements

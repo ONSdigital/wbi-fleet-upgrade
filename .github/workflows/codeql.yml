@@ -7,7 +7,7 @@ on:
     branches: [main]
   schedule:
     # Run CodeQL analysis every Monday at 00:00 UTC
-    - cron: '0 0 * * 1'
+    - cron: "0 0 * * 1"
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['python']
+        language: ["python"]
 
     steps:
       - name: Checkout repository
@@ -32,7 +32,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: "3.11"
           cache: pip
 
       - name: Install dependencies

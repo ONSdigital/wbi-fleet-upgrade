@@ -54,3 +54,4 @@ repos:
     hooks:
       - id: markdownlint
         files: \.md$
+        args: ["-c", ".markdownlint.json"]

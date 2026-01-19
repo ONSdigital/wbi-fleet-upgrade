@@ -16,6 +16,7 @@ Read the [Civil Service Code](https://www.gov.uk/government/publications/civil-s
 > - where the code of conduct says "project" we mean ONS, `ONSdigital` and all repositories hosted within it.
 > - where the code of conduct says "maintainer" we mean `ONSdigital` organisation owners
 > - where the code of conduct says "leadership" we mean both `ONSdigital` organisation owners, line managers, and other
+
     leadership within ONS
 
 ## Our Pledge
@@ -143,11 +144,7 @@ For answers to common questions about this code of conduct, see the FAQ at
 [https://www.contributor-covenant.org/translations][translations].
 
 [homepage]: https://www.contributor-covenant.org
-
 [v2.1]: https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
-
 [Mozilla CoC]: https://github.com/mozilla/diversity
-
 [FAQ]: https://www.contributor-covenant.org/faq
-
 [translations]: https://www.contributor-covenant.org/translations
