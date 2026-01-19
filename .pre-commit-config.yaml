@@ -1,5 +1,4 @@
 ---
-# Pre-commit hooks for DP Analytics Terraform repo
 # Install: pipx install pre-commit (recommended) or pip install pre-commit
 # Enable: pre-commit install
 
@@ -15,7 +14,7 @@ repos:
 
   # Python formatting
   - repo: https://github.com/psf/black
-    rev: 25.12.0
+    rev: 26.1.0
     hooks:
       - id: black
         language_version: python3
