@@ -2,6 +2,7 @@
 
 [![Static Analysis](https://github.com/ONSdigital/wbi-fleet-upgrade/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/ONSdigital/wbi-fleet-upgrade/actions/workflows/static-analysis.yml)
 [![CodeQL](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/codeql.yml/badge.svg)](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/codeql.yml)
+[![Google Cloud](https://img.shields.io/badge/Google%20Cloud-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/vertex-ai/docs/workbench/instances)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
 ## Overview
@@ -146,23 +147,6 @@ python3 main.py --project <project-id> --locations LOCATION \
 --stagger-delay SECONDS        Delay between starting operations
                                (default: 5.0)
 --verbose                      Show detailed output
-```
-
-## Project Structure
-
-```text
-/
-├── fleet_upgrader/         Main Python package
-│   ├── clients.py          API client for Workbench
-│   ├── upgrader.py         Upgrade logic
-│   ├── rollback.py         Rollback logic
-│   ├── models.py           Data structures
-│   ├── config.py           Configuration
-│   └── log_utils.py        Logging setup
-├── main.py                 Python CLI tool (upgrade & rollback)
-├── wb-upgrade.sh           Bash wrapper for upgrades
-├── wb-rollback.sh          Bash wrapper for rollback
-└── tests/                  Unit tests
 ```
 
 ## Real Examples
@@ -346,7 +330,7 @@ pytest tests/ --cov=fleet_upgrader --cov-report=html
 
 ## Requirements
 
-- Python 3.8 or newer
+- Python 3.11 or newer
 - Google Cloud SDK (`gcloud`)
 - Active GCP authentication
 - Notebooks API enabled: [Notebooks API (v2)](https://notebooks.googleapis.com/$discovery/rest?version=v2)
