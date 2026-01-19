@@ -38,7 +38,8 @@ python3 -m pytest
 
 ## Security best practices (please follow)
 
-This project interacts with Google Cloud resources. Small changes can have big impact. When contributing, please follow these guidelines.
+This project interacts with Google Cloud resources. Small changes can
+have big impact. When contributing, please follow these guidelines.
 
 ### 1) Never commit secrets
 
@@ -58,14 +59,19 @@ If you accidentally commit a secret:
 ### 2) Prefer least-privilege access
 
 - Use the minimum IAM roles needed to test.
-- Avoid introducing changes that require broader permissions unless there’s a clear reason.
-- Where possible, keep API calls scoped to the target project and specified zones.
+- Avoid introducing changes that require broader permissions unless
+  there's a clear reason.
+- Where possible, keep API calls scoped to the target project and
+  specified zones.
 
 ### 3) Be careful with logging
 
-- Don’t log access tokens, auth headers, credential file paths, or full request/response bodies.
-- Prefer logging high-level identifiers (instance name, zone, operation name) over full payloads.
-- If you add new logs, consider whether they could contain user data or internal URLs.
+- Don't log access tokens, auth headers, credential file paths, or
+  full request/response bodies.
+- Prefer logging high-level identifiers (instance name, zone, operation
+  name) over full payloads.
+- If you add new logs, consider whether they could contain user data or
+  internal URLs.
 
 ### 4) Dry-run should be safe
 
@@ -79,12 +85,15 @@ If you add new operations, ensure `--dry-run`:
 
 - Treat CLI args and environment variables as untrusted input.
 - Validate project IDs, locations, and instance names.
-- Avoid shell injection risks in wrapper scripts (quote variables, avoid `eval`, avoid constructing commands as strings).
+- Avoid shell injection risks in wrapper scripts (quote variables,
+  avoid `eval`, avoid constructing commands as strings).
 
 ### 6) Dependency hygiene
 
-- Keep runtime deps in `requirements.txt` (or `pyproject.toml` dependencies).
-- Keep dev/test tooling in `requirements-dev.txt` (or `pyproject.toml` optional `dev`).
+- Keep runtime deps in `requirements.txt` (or `pyproject.toml`
+  dependencies).
+- Keep dev/test tooling in `requirements-dev.txt` (or `pyproject.toml`
+  optional `dev`).
 - When updating dependencies, prefer small, reviewed bumps.
 
 Optional local check:
@@ -117,4 +126,6 @@ Common pattern:
 - `requirements.txt` = runtime deps
 - `requirements-dev.txt` = runtime deps + test/lint/typecheck tools
 
-For packaging, `pyproject.toml` can also be the single source of truth. The key is: **pick one canonical source** and avoid duplicating dependency lists across multiple places.
+For packaging, `pyproject.toml` can also be the single source of truth.
+The key is: **pick one canonical source** and avoid duplicating
+dependency lists across multiple places.

@@ -1,8 +1,16 @@
 # Vertex AI Workbench Fleet Upgrader
 
+[![Linting and Security](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/ci.yml/badge.svg)](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/codeql.yml/badge.svg)](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/codeql.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+
 ## Overview
 
-This tool uses Google native Vertex AI Workbench Instance upgrade process and upgrades your Vertex AI Workbench instances automatically. You can upgrade entire fleets of instances across multiple locations, or target one specific instance. It also supports rolling back recently upgraded instances to their previous version.
+This tool uses Google native Vertex AI Workbench Instance upgrade
+process and upgrades your Vertex AI Workbench instances automatically.
+You can upgrade entire fleets of instances across multiple locations, or
+target one specific instance. It also supports rolling back recently
+upgraded instances to their previous version.
 
 ## Quick Start
 
@@ -69,16 +77,23 @@ python3 main.py \
 
 ## Main Features
 
-- ✅ **Fleet Upgrades**: Upgrade all instances in specified locations
+- ✅ **Fleet Upgrades**: Upgrade all instances in specified
+  locations
 - ✅ **Single Instance Upgrades**: Target one specific instance
-- ✅ **Parallel Processing**: Upgrade multiple instances simultaneously
+- ✅ **Parallel Processing**: Upgrade multiple instances
+  simultaneously
 - ✅ **Health Checks**: Verify instances before and after upgrading
-- ✅ **Automatic Rollback on Failure**: In upgrade mode, roll back failed upgrades automatically
-- ✅ **Manual Rollback Mode**: Dedicated rollback flow to revert recently upgraded instances
+- ✅ **Automatic Rollback on Failure**: In upgrade mode, roll back
+  failed upgrades automatically
+- ✅ **Manual Rollback Mode**: Dedicated rollback flow to revert
+  recently upgraded instances
 - ✅ **Detailed Reports**: Get comprehensive logs and JSON reports
 - ✅ **Dry Run Mode**: Check what would happen without making changes
-- ✅ **State Validation & Auto-Start**: Will automatically start STOPPED/SUSPENDED instances before upgrade (unless --dry-run)
-- ✅ **Rollback Pre-Start**: In rollback mode, STOPPED/SUSPENDED instances are started in parallel before eligibility checks and rollback operations
+- ✅ **State Validation & Auto-Start**: Will automatically start
+  STOPPED/SUSPENDED instances before upgrade (unless --dry-run)
+- ✅ **Rollback Pre-Start**: In rollback mode, STOPPED/SUSPENDED
+  instances are started in parallel before eligibility checks and
+  rollback operations
 
 ## How to Use It
 
@@ -95,35 +110,47 @@ python3 main.py --project <project-id> --locations LOCATION
 python3 main.py --project <project-id> --locations LOCATION --instance INSTANCE_ID
 
 # Upgrade with automatic rollback on failure
-python3 main.py --project <project-id> --locations LOCATION --rollback-on-failure
+python3 main.py --project <project-id> --locations LOCATION \
+  --rollback-on-failure
 
 # Check rollback eligibility for all instances (dry run)
-python3 main.py --project <project-id> --locations LOCATION --rollback --dry-run
+python3 main.py --project <project-id> --locations LOCATION \
+  --rollback --dry-run
 
 # Roll back one instance to previous version
-python3 main.py --project <project-id> --locations LOCATION --instance INSTANCE_ID --rollback
+python3 main.py --project <project-id> --locations LOCATION \
+  --instance INSTANCE_ID --rollback
 ```
 
 ### All Options
 
-```
+```text
 --project <project-id>              Your GCP project ID (required)
 --locations LOC1 LOC2          Zone locations to check (required)
---instance INSTANCE_ID         Specific instance to upgrade or roll back (optional)
---rollback                     Rollback mode: revert to previous version (instead of upgrade)
---dry-run                      Check without upgrading or rolling back
---max-parallel NUM             How many to upgrade/rollback at once (default: 10)
---timeout SECONDS              How long to wait per operation (default: 7200)
---poll-interval SECONDS        How often to check progress (default: 20)
---rollback-on-failure          In upgrade mode, roll back if upgrade fails
---health-check-timeout SECS    How long to wait for health check (default: 800)
---stagger-delay SECONDS        Delay between starting operations (default: 5.0)
+--instance INSTANCE_ID         Specific instance to upgrade or
+                               roll back (optional)
+--rollback                     Rollback mode: revert to previous
+                               version (instead of upgrade)
+--dry-run                      Check without upgrading or rolling
+                               back
+--max-parallel NUM             How many to upgrade/rollback at
+                               once (default: 10)
+--timeout SECONDS              How long to wait per operation
+                               (default: 7200)
+--poll-interval SECONDS        How often to check progress
+                               (default: 20)
+--rollback-on-failure          In upgrade mode, roll back if
+                               upgrade fails
+--health-check-timeout SECS    How long to wait for health check
+                               (default: 800)
+--stagger-delay SECONDS        Delay between starting operations
+                               (default: 5.0)
 --verbose                      Show detailed output
 ```
 
 ## Project Structure
 
-```
+```text
 /
 ├── fleet_upgrader/         Main Python package
 │   ├── clients.py          API client for Workbench
@@ -206,17 +233,24 @@ python3 main.py \
 
 1. **Dry Run Mode**: Test everything before making changes
 2. **Health Checks**: Verify instances are ready before and after
-3. **Automatic Rollback**: In upgrade mode, undo failed upgrades automatically
-4. **Dedicated Rollback Mode**: Revert recently upgraded instances when supported
-5. **Detailed Logging**: Track every step in `workbench-upgrade.log` and `workbench-rollback.log`
-6. **JSON Reports**: Get structured reports in `upgrade-report-*.json` and `rollback-report-*.json`
+3. **Automatic Rollback**: In upgrade mode, undo failed upgrades
+   automatically
+4. **Dedicated Rollback Mode**: Revert recently upgraded instances when
+   supported
+5. **Detailed Logging**: Track every step in `workbench-upgrade.log`
+   and `workbench-rollback.log`
+6. **JSON Reports**: Get structured reports in `upgrade-report-*.json`
+   and `rollback-report-*.json`
 7. **State Validation**: Only operate on ACTIVE instances
 
 ## What Happens During an Upgrade
 
 1. **Scan**: Find all instances in specified locations
-2. **Pre-Start (Fleet)**: Start all STOPPED/SUSPENDED instances in parallel; skip actual start in --dry-run
-3. **Check**: Verify each instance is ACTIVE and ready; if STOPPED/SUSPENDED and not yet started, the tool will start it automatically
+2. **Pre-Start (Fleet)**: Start all STOPPED/SUSPENDED instances in
+   parallel; skip actual start in --dry-run
+3. **Check**: Verify each instance is ACTIVE and ready; if
+   STOPPED/SUSPENDED and not yet started, the tool will start it
+   automatically
 4. **Test Upgradeability**: Ask GCP if upgrade is available
 5. **Upgrade**: Start the upgrade operation
 6. **Monitor**: Poll the operation until complete
@@ -227,9 +261,12 @@ python3 main.py \
 
 ### When You Can Roll Back
 
-Rollback is only available if the instance was upgraded recently and a valid snapshot/previous version exists. The tool performs pre-checks to confirm:
+Rollback is only available if the instance was upgraded recently and a
+valid snapshot/previous version exists. The tool performs pre-checks to
+confirm:
 
-- Instance is in ACTIVE state (STOPPED/SUSPENDED instances are started in parallel first, unless --dry-run)
+- Instance is in ACTIVE state (STOPPED/SUSPENDED instances are started
+  in parallel first, unless --dry-run)
 - Recent successful upgrade is present in history
 - A valid snapshot/rollback target exists
 - Rollback timing window is still valid
@@ -238,22 +275,29 @@ Use `--rollback --dry-run` to check eligibility safely.
 
 ### How Rollback Works
 
-1. **Scan**: Find instances in specified locations (or a single instance)
-2. **Pre-Start (Fleet)**: Start all STOPPED/SUSPENDED instances in parallel prior to eligibility checks; skip actual start in --dry-run
-3. **Pre-Checks**: Validate state, upgrade history, snapshot, and timing window
+1. **Scan**: Find instances in specified locations (or a single
+   instance)
+2. **Pre-Start (Fleet)**: Start all STOPPED/SUSPENDED instances in
+   parallel prior to eligibility checks; skip actual start in --dry-run
+3. **Pre-Checks**: Validate state, upgrade history, snapshot, and
+   timing window
 4. **Rollback**: Trigger rollback to the previous version
 5. **Monitor**: Poll until the operation completes
 6. **Verify**: Confirm the instance returns to ACTIVE and is healthy
-7. **Report**: Write logs to `workbench-rollback.log` and JSON report `rollback-report-*.json`
+7. **Report**: Write logs to `workbench-rollback.log` and JSON report
+   `rollback-report-*.json`
 
 ### Rollback Commands
 
 ```bash
-# Fleet rollback eligibility (dry run) - also shows which STOPPED/SUSPENDED instances would be started
-python3 main.py --project <project-id> --locations LOCATIONS --rollback --dry-run
+# Fleet rollback eligibility (dry run) - shows which
+# STOPPED/SUSPENDED instances would be started
+python3 main.py --project <project-id> --locations LOCATIONS \
+  --rollback --dry-run
 
 # Single instance rollback (auto-start if STOPPED/SUSPENDED)
-python3 main.py --project <project-id> --locations LOCATIONS --instance INSTANCE_ID --rollback
+python3 main.py --project <project-id> --locations LOCATIONS \
+  --instance INSTANCE_ID --rollback
 
 # Bash wrapper (with env vars)
 export GCP_PROJECT_ID=<project-id>
@@ -263,7 +307,7 @@ export LOCATIONS="europe-west2-a europe-west2-b"
 
 ### Rollback Troubleshooting
 
-**Rollback Not Available**
+#### Rollback Not Available
 
 ```bash
 # Check upgrade history for the instance
@@ -271,7 +315,7 @@ export LOCATIONS="europe-west2-a europe-west2-b"
 # Confirm snapshot/previous version is available
 ```
 
-**Permission Denied**
+#### Permission Denied
 
 ```bash
 # Check you're logged in
@@ -281,7 +325,7 @@ gcloud auth list
 gcloud projects describe PROJECT_ID
 ```
 
-**Instance Busy or Not Running**
+#### Instance Busy or Not Running
 
 ```bash
 # Ensure instance is ACTIVE
