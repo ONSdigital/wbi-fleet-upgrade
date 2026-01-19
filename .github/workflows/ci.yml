@@ -1,0 +1,39 @@
+---
+name: CI
+permissions:
+  contents: read
+  pull-requests: write
+
+on: # yamllint disable-line rule:truthy
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: "${{ github.head_ref || github.ref }}-${{ github.workflow }}"
+  cancel-in-progress: true
+
+jobs:
+  lint-test:
+    name: Lint and Test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Poetry
+        run: pipx install poetry==1.8.3
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: .python-version
+          cache: poetry
+
+      - name: Install dependencies
+        run: make install-dev
+
+      - name: Lint Python
+        run: make lint
+
+      - name: Test
+        run: make test

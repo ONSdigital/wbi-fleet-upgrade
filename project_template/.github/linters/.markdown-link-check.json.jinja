@@ -1,0 +1,14 @@
+{
+  {% if is_public_repo -%}
+  "ignorePatterns": [],
+  {%- else -%}
+  "ignorePatterns": [
+    {
+      "pattern": "{{ repository_owner }}/{{ repository_name }}"
+    }
+  ],
+  {%- endif %}
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "30s"
+}
