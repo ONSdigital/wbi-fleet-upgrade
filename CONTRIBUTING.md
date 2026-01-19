@@ -1,43 +1,120 @@
-# Contributing Guidelines
+# Contributing
 
-Pull requests, bug reports, and all other forms of contribution are welcomed and highly encouraged!
-This guide serves to set clear expectations for everyone involved with the project so that we can improve it together
-while also creating a welcoming space for everyone to participate. Following these guidelines will help ensure a
-positive experience for contributors and maintainers.
+Thanks for helping improve **wbi-fleet-upgrade**.
 
-## Code of Conduct
+## Quick start
 
-This project and everyone participating in it are governed by our [Code of Conduct](CODE_OF_CONDUCT.md). By
-participating, you are expected to uphold this code.
+### Create a virtual environment
 
-## How Can I Contribute?
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -U pip
+```
 
-### Reporting Security Issues
+### Install dependencies
 
-Review our [Security Policy](SECURITY.md) for information on how to report security vulnerabilities.
+This repo supports two common workflows:
 
-### Reporting Bugs
+**Option A (recommended if you’re editing the package):**
 
-If you encounter a bug, please check the existing issues to see if it has already been reported. If not, please open a
-new issue, providing as much detail as possible, including steps to reproduce.
+```bash
+pip install -e .
+pip install -e ".[dev]"
+```
 
-### Suggesting Enhancements
+**Option B (requirements files):**
 
-We welcome suggestions for new features or enhancements. Please open an issue to discuss your ideas before starting work
-on them.
+```bash
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
 
-### Pull Requests
+### Run tests
 
-We actively welcome your pull requests. To make the process as smooth as possible, please follow these guidelines:
+```bash
+python3 -m pytest
+```
 
-1. Fork the repository and create your branch from `main`.
-2. If you've added code that should be tested, add tests.
-3. Ensure that your code passes the existing tests.
-4. Make sure your code lints.
-5. Update the documentation to reflect any changes if necessary.
-6. Open a pull request, providing a clear description of your changes and referencing any related issues.
+## Security best practices (please follow)
 
-## License
+This project interacts with Google Cloud resources. Small changes can have big impact. When contributing, please follow these guidelines.
 
-By contributing to this project, you agree that your contributions will be licensed under
-the [project's license](LICENSE).
+### 1) Never commit secrets
+
+Don’t commit any of the following:
+
+- Service account keys (`*.json`), API keys, OAuth tokens, refresh tokens
+- `application_default_credentials.json`
+- `.env` files containing credentials
+- Logs or reports that contain sensitive data
+
+If you accidentally commit a secret:
+
+1. Remove it from the repo history if possible.
+2. Revoke/rotate the credential immediately.
+3. Open a PR noting the rotation.
+
+### 2) Prefer least-privilege access
+
+- Use the minimum IAM roles needed to test.
+- Avoid introducing changes that require broader permissions unless there’s a clear reason.
+- Where possible, keep API calls scoped to the target project and specified zones.
+
+### 3) Be careful with logging
+
+- Don’t log access tokens, auth headers, credential file paths, or full request/response bodies.
+- Prefer logging high-level identifiers (instance name, zone, operation name) over full payloads.
+- If you add new logs, consider whether they could contain user data or internal URLs.
+
+### 4) Dry-run should be safe
+
+If you add new operations, ensure `--dry-run`:
+
+- does not mutate resources
+- does not start/stop instances
+- does not enable/disable APIs
+
+### 5) Validate inputs and be explicit
+
+- Treat CLI args and environment variables as untrusted input.
+- Validate project IDs, locations, and instance names.
+- Avoid shell injection risks in wrapper scripts (quote variables, avoid `eval`, avoid constructing commands as strings).
+
+### 6) Dependency hygiene
+
+- Keep runtime deps in `requirements.txt` (or `pyproject.toml` dependencies).
+- Keep dev/test tooling in `requirements-dev.txt` (or `pyproject.toml` optional `dev`).
+- When updating dependencies, prefer small, reviewed bumps.
+
+Optional local check:
+
+```bash
+python3 -m pip install -U pip
+python3 -m pip install pip-audit
+pip-audit
+```
+
+## Code quality
+
+- Formatting: `black .`
+- Lint: `flake8`
+- Types: `mypy src`
+
+## Project layout
+
+- Source code: `src/`
+- Tests: `tests/`
+- CLI entrypoint: `main.py`
+- Shell wrappers: `wb-upgrade.sh`, `wb-rollback.sh`
+
+## Requirements files: do we need more than one?
+
+Not strictly.
+
+Common pattern:
+
+- `requirements.txt` = runtime deps
+- `requirements-dev.txt` = runtime deps + test/lint/typecheck tools
+
+For packaging, `pyproject.toml` can also be the single source of truth. The key is: **pick one canonical source** and avoid duplicating dependency lists across multiple places.

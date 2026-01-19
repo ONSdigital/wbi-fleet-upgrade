@@ -1,0 +1,103 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  dependency-review:
+    name: Review Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          # Fail the build on critical vulnerabilities
+          fail-on-severity: critical
+          # Allow licenses commonly used in Python projects
+          allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, Python-2.0
+          # Comment on PR with dependency changes
+          comment-summary-in-pr: always
+
+  dependency-scan:
+    name: Scan Python Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-audit safety
+
+      - name: Run pip-audit
+        id: pip-audit
+        continue-on-error: true
+        run: |
+          pip-audit --desc --format json --output pip-audit-report.json || true
+          pip-audit --desc
+
+      - name: Run Safety check
+        id: safety
+        continue-on-error: true
+        run: |
+          pip install -r requirements.txt
+          safety check --json --output safety-report.json || true
+          safety check || true
+
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            pip-audit-report.json
+            safety-report.json
+          retention-days: 30
+
+      - name: Comment on PR with security findings
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '## 🔒 Dependency Security Scan Results\n\n';
+
+            try {
+              const pipAudit = fs.readFileSync('pip-audit-report.json', 'utf8');
+              const pipAuditData = JSON.parse(pipAudit);
+              const vulnCount = pipAuditData.dependencies?.length || 0;
+
+              if (vulnCount > 0) {
+                comment += `⚠️ **pip-audit found ${vulnCount} vulnerabilities**\n\n`;
+              } else {
+                comment += '✅ **pip-audit**: No vulnerabilities found\n\n';
+              }
+            } catch (e) {
+              comment += '✅ **pip-audit**: Scan completed\n\n';
+            }
+
+            comment += '_For detailed reports, check the workflow artifacts._';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

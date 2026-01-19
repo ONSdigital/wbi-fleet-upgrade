@@ -1,0 +1,4 @@
+google-cloud-notebooks>=1.15.0
+google-api-core>=2.29.0
+google-auth>=2.47.0
+protobuf>=6.33.4

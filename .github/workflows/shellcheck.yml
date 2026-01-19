@@ -1,0 +1,69 @@
+name: Shell Script Validation
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - '**.sh'
+      - '**.bash'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '**.sh'
+      - '**.bash'
+  workflow_dispatch:
+
+jobs:
+  shellcheck:
+    name: ShellCheck Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          severity: warning
+          format: gcc
+
+      - name: Verify shell scripts are executable
+        run: |
+          echo "Checking shell script permissions..."
+          for script in *.sh; do
+            if [ -f "$script" ]; then
+              if [ ! -x "$script" ]; then
+                echo "❌ $script is not executable"
+                exit 1
+              else
+                echo "✅ $script is executable"
+              fi
+            fi
+          done
+
+  shell-syntax:
+    name: Shell Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check bash syntax
+        run: |
+          echo "Checking shell script syntax..."
+          for script in *.sh; do
+            if [ -f "$script" ]; then
+              echo "Checking $script..."
+              bash -n "$script"
+              echo "✅ $script syntax is valid"
+            fi
+          done
+
+      - name: Run shfmt for formatting check
+        uses: luizm/action-sh-checker@master
+        with:
+          sh_checker_comment: true
+          sh_checker_exclude: ".git"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

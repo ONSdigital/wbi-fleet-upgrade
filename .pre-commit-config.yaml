@@ -1,0 +1,57 @@
+---
+# Pre-commit hooks for DP Analytics Terraform repo
+# Install: pipx install pre-commit (recommended) or pip install pre-commit
+# Enable: pre-commit install
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  # Python formatting
+  - repo: https://github.com/psf/black
+    rev: 25.12.0
+    hooks:
+      - id: black
+        language_version: python3
+
+  # Shell formatting
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.12.0-2
+    hooks:
+      - id: shfmt
+        files: \.(sh|bash|zsh|zshrc)$
+        args:
+          - -i
+          - "2"
+          - -bn
+          - -ci
+          - -sr
+
+  # Secret scanning
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
+        args:
+          - --no-banner
+          - --redact
+
+  # YAML linting (more thorough than basic check-yaml)
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        files: \.(yaml|yml)$
+
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.47.0
+    hooks:
+      - id: markdownlint
+        files: \.md$
