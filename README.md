@@ -1,6 +1,6 @@
 # Vertex AI Workbench Fleet Upgrader
 
-[![Linting and Security](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/ci.yml/badge.svg)](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/ci.yml)
+[![Static Analysis](https://github.com/ONSdigital/wbi-fleet-upgrade/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/ONSdigital/wbi-fleet-upgrade/actions/workflows/static-analysis.yml)
 [![CodeQL](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/codeql.yml/badge.svg)](https://github.com/erayguner/wbi-fleet-upgrade/actions/workflows/codeql.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
