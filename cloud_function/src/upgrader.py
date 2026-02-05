@@ -9,7 +9,6 @@ Adapted for Cloud Function environment:
 
 import logging
 import time
-from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 
 from clients import WorkbenchRestClient
