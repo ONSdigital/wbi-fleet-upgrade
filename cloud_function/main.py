@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 from clients import WorkbenchRestClient
 from config import CloudFunctionConfig
-from models import InstanceRef, UpgradeResult
+from models import UpgradeResult
 from upgrader import FleetUpgrader
 from rollback import FleetRollback
 
