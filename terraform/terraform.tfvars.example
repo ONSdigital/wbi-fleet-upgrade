@@ -1,0 +1,62 @@
+# =============================================================================
+# WBI Fleet Upgrade Cloud Function - Terraform Variables
+# =============================================================================
+# Copy this file to terraform.tfvars and customize for your environment.
+# =============================================================================
+
+# Required: GCP project ID
+project_id = ""
+
+# Region for the Cloud Function
+region = "europe-west2"
+
+# Name of the Cloud Function
+function_name = "wbi-fleet-upgrade"
+
+# Target projects where Workbench instances are managed
+# Leave empty to use the same project as the function
+target_project_ids = []
+
+# Default zones to scan for instances
+target_locations = [
+  "europe-west2-a",
+  "europe-west2-b",
+  "europe-west2-c"
+]
+
+# Default operation mode (true = safer, no actual changes)
+dry_run_default = true
+
+# Maximum parallel operations
+max_parallel_default = 10
+
+# Cloud Function timeout (max 540 for HTTP triggers)
+timeout_seconds = 540
+
+# Memory allocation (MB)
+memory_mb = 512
+
+# Instance scaling
+min_instances = 0
+max_instances = 10
+
+# VPC connector for private networking (optional)
+# vpc_connector = "projects/my-project/locations/europe-west2/connectors/my-connector"
+vpc_connector = ""
+
+# Use existing service account (optional)
+# Leave empty to create a new one with least-privilege permissions
+service_account_email = ""
+
+# IAM members allowed to invoke the function
+# Format: "user:email@example.com", "serviceAccount:sa@project.iam.gserviceaccount.com", "group:group@example.com"
+allowed_invokers = [
+  # "user:admin@example.com",
+  # "serviceAccount:ci-cd@your-project.iam.gserviceaccount.com"
+]
+
+# Labels for resource organization
+labels = {
+  managed-by  = "terraform"
+  component   = "wbi-fleet-upgrade"
+}
