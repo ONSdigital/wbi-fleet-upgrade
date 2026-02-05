@@ -13,7 +13,6 @@ All configuration is done via environment variables.
 import logging
 import os
 import sys
-from dataclasses import asdict
 from datetime import datetime
 from functools import wraps
 from typing import Any, Callable, Dict, List, Optional, Tuple
