@@ -329,9 +329,6 @@ show_outputs() {
   function_uri=$(terraform output -raw function_uri 2>/dev/null || echo "")
 
   if [[ -n "$function_uri" ]]; then
-    TOKEN=$(gcloud auth print-identity-token)
-    URL="$function_uri"
-
     echo -e "${GREEN}Function URL:${NC} $function_uri"
     echo ""
     echo -e "${BLUE}Test commands:${NC}"
@@ -349,10 +346,11 @@ show_outputs() {
     echo "curl -H \"Authorization: Bearer \$TOKEN\" \"$function_uri/status\""
     echo ""
     echo "# Check upgradability (dry-run)"
-    echo "curl -X POST \"$function_uri/check-upgradability\" \\"
-    echo "  -H \"Authorization: Bearer \$TOKEN\" \\"
-    echo "  -H \"Content-Type: application/json\" \\"
-    echo "  -d '{\"dry_run\": true}'"
+    printf '%s\n' \
+      "curl -X POST \"$function_uri/check-upgradability\" \\" \
+      "  -H \"Authorization: Bearer \$TOKEN\" \\" \
+      "  -H \"Content-Type: application/json\" \\" \
+      "  -d '{\"dry_run\": true}'"
     echo ""
   fi
 }

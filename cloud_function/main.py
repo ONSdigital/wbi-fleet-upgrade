@@ -208,11 +208,11 @@ def get_config_from_request(request: Request) -> CloudFunctionConfig:
 
 
 def create_response(
-        success: bool,
-        data: Optional[Dict] = None,
-        error: Optional[str] = None,
-        message: Optional[str] = None,
-        status_code: int = 200,
+    success: bool,
+    data: Optional[Dict] = None,
+    error: Optional[str] = None,
+    message: Optional[str] = None,
+    status_code: int = 200,
 ) -> Tuple[Dict[str, Any], int]:
     """Create a standardized API response."""
     response = {
@@ -600,3 +600,4 @@ def handle_health(request: Request) -> Tuple[Dict[str, Any], int]:
             message=str(e),
             status_code=503,
         )
+
