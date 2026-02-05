@@ -10,7 +10,6 @@ This module provides HTTP endpoints for:
 All configuration is done via environment variables.
 """
 
-import json
 import logging
 import os
 import sys
