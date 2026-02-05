@@ -600,4 +600,3 @@ def handle_health(request: Request) -> Tuple[Dict[str, Any], int]:
             message=str(e),
             status_code=503,
         )
-
