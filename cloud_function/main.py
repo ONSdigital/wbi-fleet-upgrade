@@ -19,7 +19,7 @@ from functools import wraps
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import functions_framework
-from flask import Request, jsonify
+from flask import Request
 
 # Add src to path for local imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
