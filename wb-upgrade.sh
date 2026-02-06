@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# shellcheck disable=SC2206
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -443,7 +446,6 @@ echo ""
 
 PYTHON_ARGS=(
   "--project" "$PROJECT_ID"
-  # shellcheck disable=SC2206
 	"--locations" $LOCATIONS
 	"--max-parallel" "$MAX_PARALLEL"
 	"--timeout" "$TIMEOUT"
