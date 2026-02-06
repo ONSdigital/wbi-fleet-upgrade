@@ -443,7 +443,7 @@ echo ""
 
 PYTHON_ARGS=(
 	"--project" "$PROJECT_ID"
-	"--locations" "$LOCATIONS"
+	"--locations" $LOCATIONS
 	"--max-parallel" "$MAX_PARALLEL"
 	"--timeout" "$TIMEOUT"
 	"--poll-interval" "$POLL_INTERVAL"
