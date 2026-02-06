@@ -10,24 +10,22 @@ This module provides HTTP endpoints for:
 All configuration is done via environment variables.
 """
 
-import json
 import logging
 import os
 import sys
-from dataclasses import asdict
 from datetime import datetime
 from functools import wraps
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import functions_framework
-from flask import Request, jsonify
+from flask import Request
 
 # Add src to path for local imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
 
 from clients import WorkbenchRestClient
 from config import CloudFunctionConfig
-from models import InstanceRef, UpgradeResult
+from models import UpgradeResult
 from upgrader import FleetUpgrader
 from rollback import FleetRollback
 
