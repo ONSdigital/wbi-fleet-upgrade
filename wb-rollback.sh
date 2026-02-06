@@ -453,7 +453,8 @@ if [[ -f "$PYTHON_SCRIPT_ROLLBACK" ]]; then
 	ARGS=(
 		"--rollback"
 		"--project" "$PROJECT_ID"
-		"--locations" $LOCATIONS
+    # shellcheck disable=SC2206
+    "--locations" $LOCATIONS
 		"--max-parallel" "$MAX_PARALLEL"
 		"--timeout" "$TIMEOUT"
 		"--poll-interval" "$POLL_INTERVAL"
