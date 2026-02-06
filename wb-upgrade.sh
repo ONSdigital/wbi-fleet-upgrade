@@ -445,7 +445,7 @@ log_step "Starting Upgrade Process"
 echo ""
 
 PYTHON_ARGS=(
-  "--project" "$PROJECT_ID"
+	"--project" "$PROJECT_ID"
 	"--locations" $LOCATIONS
 	"--max-parallel" "$MAX_PARALLEL"
 	"--timeout" "$TIMEOUT"
