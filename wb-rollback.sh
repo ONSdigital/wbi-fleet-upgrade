@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# shellcheck disable=SC2206
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -453,7 +456,7 @@ if [[ -f "$PYTHON_SCRIPT_ROLLBACK" ]]; then
 	ARGS=(
 		"--rollback"
 		"--project" "$PROJECT_ID"
-		"--locations" "$LOCATIONS"
+		"--locations" $LOCATIONS
 		"--max-parallel" "$MAX_PARALLEL"
 		"--timeout" "$TIMEOUT"
 		"--poll-interval" "$POLL_INTERVAL"
