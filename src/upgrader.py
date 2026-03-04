@@ -527,9 +527,6 @@ class FleetUpgrader:
                 )
                 time.sleep(check_interval)
 
-        # Fallback (should not reach here)
-        return False
-
     def _try_rollback(self, inst: InstanceRef) -> None:
         """
         Attempt to rollback an instance upgrade.
