@@ -84,7 +84,7 @@ class WorkbenchRestClient:
                     try:
                         error_data = resp.json()
                         error_info = error_data.get("error", {}).get("message", "")
-                    except:
+                    except Exception:
                         pass
                     logger.warning(
                         f"Retryable error {resp.status_code} ({error_info}), attempt {attempt + 1}/{self.max_retries + 1}, waiting {delay:.1f}s..."
