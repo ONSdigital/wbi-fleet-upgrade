@@ -3,7 +3,7 @@ functions-framework==3.*
 
 # Google Cloud SDK dependencies
 google-auth==2.49.1
-google-api-core==2.30.0
+google-api-core==2.30.2
 
 # HTTP requests with authentication
 requests>=2.31.0
