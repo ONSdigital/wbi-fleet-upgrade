@@ -5,9 +5,9 @@ description = "This tool upgrades your Vertex AI Workbench instances automatical
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-  "google-auth>=2.47.0",
+  "google-auth>=2.49.2",
   "google-auth-httplib2>=0.3.0",
-  "google-api-core>=2.29.0",
+  "google-api-core>=2.30.3",
   "google-cloud-notebooks>=1.15.0",
   "protobuf>=6.33.4",
   "requests>=2.32.5",
