@@ -255,22 +255,25 @@ output "invoke_command" {
     curl -X POST "${google_cloudfunctions2_function.wbi_upgrade.service_config[0].uri}/upgrade" \
       -H "Authorization: Bearer $TOKEN" \
       -H "Content-Type: application/json" \
+      --max-time 530 \
       -d '{"dry_run": true}' | jq
 
     # Invoke rollback endpoint
     curl -X POST "${google_cloudfunctions2_function.wbi_upgrade.service_config[0].uri}/rollback" \
-        -H "Authorization: Bearer $TOKEN
+        -H "Authorization: Bearer $TOKEN" \
         -H "Content-Type: application/json" \
+        --max-time 530 \
         -d '{}' | jq
 
     #invoke with custom parameters
     curl -X POST "${google_cloudfunctions2_function.wbi_upgrade.service_config[0].uri}/upgrade" \
       -H "Authorization: Bearer $TOKEN" \
-        -H "Content-Type: application/json" \
-        -d '{
-              "dry_run": false,
-              "max_parallel": 10,
-              "rollback_on_failure": true
-            }' | jq
+      -H "Content-Type: application/json" \
+      --max-time 530 \
+      -d '{
+            "dry_run": false,
+            "max_parallel": 10,
+            "rollback_on_failure": true
+          }' | jq
   EOT
 }

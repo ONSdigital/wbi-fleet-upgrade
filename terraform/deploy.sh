@@ -350,6 +350,7 @@ show_outputs() {
 			"curl -X POST \"$function_uri/check-upgradability\" \\" \
 			"  -H \"Authorization: Bearer \$TOKEN\" \\" \
 			"  -H \"Content-Type: application/json\" \\" \
+			"  --max-time 530 \\" \
 			"  -d '{\"dry_run\": true}'"
 		echo ""
 	fi

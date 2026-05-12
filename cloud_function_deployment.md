@@ -90,6 +90,7 @@ curl -H "Authorization: Bearer $TOKEN" "$FUNCTION_URL/"
 curl -X POST "$FUNCTION_URL/upgrade" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
+  --max-time 530 \
   -d '{"dry_run": true}'
 ```
 
@@ -482,6 +483,7 @@ curl -s "$FUNCTION_URL/check-upgradability" \
 curl -s -X POST "$FUNCTION_URL/upgrade" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
+  --max-time 530 \
   -d '{
     "project_id": "my-project",
     "locations": ["europe-west2-a", "europe-west2-b"],
@@ -492,6 +494,7 @@ curl -s -X POST "$FUNCTION_URL/upgrade" \
 curl -s -X POST "$FUNCTION_URL/upgrade" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
+  --max-time 530 \
   -d '{
     "project_id": "my-project",
     "locations": ["europe-west2-a"],
@@ -504,6 +507,7 @@ curl -s -X POST "$FUNCTION_URL/upgrade" \
 curl -s -X POST "$FUNCTION_URL/rollback" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
+  --max-time 530 \
   -d '{
     "project_id": "my-project",
     "locations": ["europe-west2-a"],
