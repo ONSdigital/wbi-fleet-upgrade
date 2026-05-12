@@ -271,7 +271,7 @@ terraform_apply() {
 	fi
 
 	if [[ -f "tfplan" ]]; then
-		if terraform apply "${apply_args[@]}" tfplan; then
+		if terraform apply "${apply_args[@]+"${apply_args[@]}"}" tfplan; then
 			log_success "Terraform apply completed"
 			rm -f tfplan
 		else
@@ -279,7 +279,7 @@ terraform_apply() {
 			exit 1
 		fi
 	else
-		if terraform apply "${apply_args[@]}"; then
+		if terraform apply "${apply_args[@]+"${apply_args[@]}"}"; then
 			log_success "Terraform apply completed"
 		else
 			log_error "Terraform apply failed"
