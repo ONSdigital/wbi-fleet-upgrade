@@ -32,6 +32,8 @@ upgraded instances to their previous version.
 - ✅ **Rollback Pre-Start**: In rollback mode, STOPPED/SUSPENDED
   instances are started in parallel before eligibility checks and
   rollback operations
+- ✅ **Cloud Function API**: Serverless HTTP endpoints for
+  event-driven or scheduled execution
 
 ## Quick Start
 
@@ -104,26 +106,26 @@ python3 main.py \
 
 ```text
 --project <project-id>              Your GCP project ID (required)
---locations LOC1 LOC2          Zone locations to check (required)
---instance INSTANCE_ID         Specific instance to upgrade or
-                               roll back (optional)
---rollback                     Rollback mode: revert to previous
-                               version (instead of upgrade)
---dry-run                      Check without upgrading or rolling
-                               back
---max-parallel NUM             How many to upgrade/rollback at
-                               once (default: 10)
---timeout SECONDS              How long to wait per operation
-                               (default: 7200)
---poll-interval SECONDS        How often to check progress
-                               (default: 20)
---rollback-on-failure          In upgrade mode, roll back if
-                               upgrade fails
---health-check-timeout SECS    How long to wait for health check
-                               (default: 800)
---stagger-delay SECONDS        Delay between starting operations
-                               (default: 5.0)
---verbose                      Show detailed output
+--locations LOC1 LOC2               Zone locations to check (required)
+--instance INSTANCE_ID              Specific instance to upgrade or
+                                    roll back (optional)
+--rollback                          Rollback mode: revert to previous
+                                    version (instead of upgrade)
+--dry-run                           Check without upgrading or rolling
+                                    back
+--max-parallel NUM                  How many to upgrade/rollback at
+                                    once (default: 5)
+--timeout SECONDS                   How long to wait per operation
+                                    (default: 7200)
+--poll-interval SECONDS             How often to check progress
+                                    (default: 20)
+--rollback-on-failure               In upgrade mode, roll back if
+                                    upgrade fails
+--health-check-timeout SECS         How long to wait for health check
+                                    (default: 600)
+--stagger-delay SECONDS             Delay between starting operations
+                                    (default: 3.0)
+--verbose                           Show detailed output
 ```
 
 ## Real Examples
@@ -145,7 +147,7 @@ python3 main.py \
 python3 main.py \
   --project <project-id> \
   --locations europe-west2-a europe-west2-b europe-west2-c \
-  --max-parallel 10
+  --max-parallel 5
 ```
 
 ### Example 3: Upgrade One Critical Instance
@@ -216,7 +218,44 @@ python3 main.py \
 5. **Upgrade**: Start the upgrade operation
 6. **Monitor**: Poll the operation until complete
 7. **Verify**: Check instance is ACTIVE and healthy
-8. **Report**: Generate detailed logs and reports
+8. **Rollback** (if --rollback-on-failure): Automatically roll back if
+   upgrade fails
+9. **Report**: Generate detailed logs and JSON report
+   `upgrade-report-*.json`
+
+## Cloud Function
+
+Deploy as a Google Cloud Function (Gen 2) for API-driven or scheduled
+execution without a local machine.
+
+### Deploy with Terraform
+
+```bash
+cd terraform/
+cp terraform.tfvars.example terraform.tfvars  # edit: project_id, allowed_invokers
+terraform init
+terraform plan -out=tfplan
+terraform apply tfplan
+terraform output function_uri
+```
+
+### Call the API
+
+```bash
+TOKEN=$(gcloud auth print-identity-token)
+URL=<function-url>
+
+# Dry-run upgrade check
+curl -X POST "$URL/upgrade" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  --max-time 530 \
+  -d '{"project_id":"<project-id>","locations":["europe-west2-a"],"dry_run":true}'
+```
+
+Available endpoints: `/health` · `/upgrade` · `/rollback` · `/status` · `/check-upgradability`
+
+> `dry_run` defaults to `true` in the Cloud Function — send `"dry_run": false` explicitly to make live changes.
 
 ## Rollback Guide
 
@@ -273,6 +312,7 @@ export LOCATIONS="europe-west2-a europe-west2-b"
 - Check upgrade history for the instance
 - Ensure a recent successful upgrade exists
 - Confirm snapshot/previous version is available
+- Act quickly — the rollback window is limited
 
 #### Permission Denied
 
@@ -299,6 +339,12 @@ pytest tests/ -v
 
 # Run with coverage (requires dev deps, e.g. pytest-cov)
 pytest tests/ -v --cov=src --cov-report=term-missing --cov-branch
+
+# Code quality
+black src/ tests/
+flake8 src/ tests/
+mypy src/
+pylint src/
 ```
 
 ## Requirements
@@ -309,9 +355,23 @@ pytest tests/ -v --cov=src --cov-report=term-missing --cov-branch
 - Notebooks API enabled: [Notebooks API (v2)](https://notebooks.googleapis.com/$discovery/rest?version=v2)
 - Required Python packages (see `requirements.txt`)
 
+### Install options
+
+```bash
+# Runtime only
+pip install -r requirements.txt
+
+# With dev tools
+pip install -r requirements-dev.txt
+
+# As an installable package (exposes workbench-upgrader command)
+pip install -e .
+```
+
 ## Support
 
 - File issues on GitHub
 - Check logs in `workbench-upgrade.log` and `workbench-rollback.log`
-- Review JSON reports for detailed information
+- Review JSON reports in `upgrade-report-*.json` and
+  `rollback-report-*.json` for detailed information
 - Use `--verbose` for debugging
