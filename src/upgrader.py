@@ -109,12 +109,6 @@ class FleetUpgrader:
 
             # If the instance is stopped/suspended, try to start it automatically
             if state in {"STOPPED", "SUSPENDED"}:
-                if self.dry_run:
-                    logger.info(
-                        f"DRY RUN: Would start instance {inst.short_name} (current state={state})"
-                    )
-                    return False, f"Would start instance from {state}"
-
                 logger.info(
                     f"Instance {inst.short_name} is {state}. Attempting to start before upgrade..."
                 )
@@ -766,13 +760,6 @@ class FleetUpgrader:
                 logger.debug(f"Could not read state for {inst.short_name}: {e}")
 
         if not to_start:
-            return
-
-        if self.dry_run:
-            for inst in to_start:
-                logger.info(
-                    f"DRY RUN: Would start instance {inst.short_name} (currently STOPPED/SUSPENDED)"
-                )
             return
 
         logger.info(f"Pre-starting {len(to_start)} instance(s) before upgrades...")
