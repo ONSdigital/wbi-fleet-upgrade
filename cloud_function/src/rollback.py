@@ -773,13 +773,6 @@ class FleetRollback:
         if not to_start:
             return
 
-        if self.dry_run:
-            for inst in to_start:
-                logger.info(
-                    f"DRY RUN: Would start instance {inst.short_name} (currently STOPPED/SUSPENDED)"
-                )
-            return
-
         logger.info(f"Pre-starting {len(to_start)} instance(s) before rollbacks...")
 
         active_starts: List[TrackedOp] = []
