@@ -26,12 +26,15 @@ upgraded instances to their previous version.
 - ✅ **Manual Rollback Mode**: Dedicated rollback flow to revert
   recently upgraded instances
 - ✅ **Detailed Reports**: Get comprehensive logs and JSON reports
-- ✅ **Dry Run Mode**: Check what would happen without making changes
+- ✅ **Dry Run Mode**: Report what would be upgraded/rolled back
+  without performing the upgrade or rollback itself. Note: dry-run
+  still starts STOPPED/SUSPENDED instances so upgradeability and
+  target versions can be evaluated (see note below)
 - ✅ **State Validation & Auto-Start**: Will automatically start
-  STOPPED/SUSPENDED instances before upgrade (unless --dry-run)
+  STOPPED/SUSPENDED instances before upgrade, including in --dry-run
 - ✅ **Rollback Pre-Start**: In rollback mode, STOPPED/SUSPENDED
   instances are started in parallel before eligibility checks and
-  rollback operations
+  rollback operations, including in --dry-run
 - ✅ **Cloud Function API**: Serverless HTTP endpoints for
   event-driven or scheduled execution
 
@@ -194,7 +197,9 @@ python3 main.py \
 
 ## Safety Features
 
-1. **Dry Run Mode**: Test everything before making changes
+1. **Dry Run Mode**: Report what would be upgraded/rolled back before
+   performing any upgrade or rollback (note: dry-run still starts
+   STOPPED/SUSPENDED instances to evaluate them)
 2. **Health Checks**: Verify instances are ready before and after
 3. **Automatic Rollback**: In upgrade mode, undo failed upgrades
    automatically
@@ -210,7 +215,7 @@ python3 main.py \
 
 1. **Scan**: Find all instances in specified locations
 2. **Pre-Start (Fleet)**: Start all STOPPED/SUSPENDED instances in
-   parallel; skip actual start in --dry-run
+   parallel, including in --dry-run, so upgradeability can be checked
 3. **Check**: Verify each instance is ACTIVE and ready; if
    STOPPED/SUSPENDED and not yet started, the tool will start it
    automatically
@@ -266,19 +271,21 @@ valid snapshot/previous version exists. The tool performs pre-checks to
 confirm:
 
 - Instance is in ACTIVE state (STOPPED/SUSPENDED instances are started
-  in parallel first, unless --dry-run)
+  in parallel first, including in --dry-run)
 - Recent successful upgrade is present in history
 - A valid snapshot/rollback target exists
 - Rollback timing window is still valid
 
-Use `--rollback --dry-run` to check eligibility safely.
+Use `--rollback --dry-run` to check eligibility without performing the
+rollback. Note: dry-run still starts STOPPED/SUSPENDED instances so
+eligibility can be evaluated.
 
 ### How Rollback Works
 
 1. **Scan**: Find instances in specified locations (or a single
    instance)
 2. **Pre-Start (Fleet)**: Start all STOPPED/SUSPENDED instances in
-   parallel prior to eligibility checks; skip actual start in --dry-run
+   parallel prior to eligibility checks, including in --dry-run
 3. **Pre-Checks**: Validate state, upgrade history, snapshot, and
    timing window
 4. **Rollback**: Trigger rollback to the previous version

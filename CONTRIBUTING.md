@@ -73,13 +73,18 @@ If you accidentally commit a secret:
 - If you add new logs, consider whether they could contain user data or
   internal URLs.
 
-### 4) Dry-run should be safe
+### 4) Dry-run boundaries
 
-If you add new operations, ensure `--dry-run`:
+`--dry-run` reports what would be upgraded/rolled back without
+performing the upgrade or rollback. Note that, by design, dry-run
+**does** start STOPPED/SUSPENDED instances so upgradeability and
+target versions can be evaluated. If you add new operations, ensure
+`--dry-run`:
 
-- does not mutate resources
-- does not start/stop instances
+- does not perform the upgrade or rollback itself
+- does not stop, suspend, or delete instances
 - does not enable/disable APIs
+- limits its mutations to starting instances needed for evaluation
 
 ### 5) Validate inputs and be explicit
 
