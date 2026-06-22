@@ -87,6 +87,10 @@ TOKEN=$(gcloud auth print-identity-token)
 curl -H "Authorization: Bearer $TOKEN" "$FUNCTION_URL/"
 
 # Run dry-run upgrade check
+# Note: dry-run reports planned upgrades but still STARTS any
+# STOPPED/SUSPENDED instances so it can evaluate upgradeability and
+# target versions. On large fleets this can exceed the HTTP timeout
+# below (starts continue server-side).
 curl -X POST "$FUNCTION_URL/upgrade" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
@@ -121,7 +125,7 @@ Upgrade Workbench instances.
 | project_id | string | Yes* | env var | GCP project ID |
 | locations | string[] | Yes* | env var | Zone list |
 | instance_id | string | No | null | Single instance mode |
-| dry_run | boolean | No | true | Simulation mode |
+| dry_run | boolean | No | true | Report planned upgrades without performing them; still starts STOPPED/SUSPENDED instances to evaluate them |
 | max_parallel | integer | No | 5 | Max concurrent ops |
 | timeout | integer | No | 7200 | Operation timeout (s) |
 | rollback_on_failure | boolean | No | false | Auto-rollback |
@@ -486,7 +490,7 @@ curl -s -X POST "$FUNCTION_URL/upgrade" \
   --max-time 530 \
   -d '{
     "project_id": "my-project",
-    "locations": ["europe-west2-a", "europe-west2-b"],
+    "locations": ["europe-west2-a", "europe-west2-b", "europe-west2-b"],
     "dry_run": true
   }' | jq
 
