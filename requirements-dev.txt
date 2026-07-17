@@ -1,6 +1,9 @@
 # Development and Testing Dependencies
 -r requirements.txt
 
+# Build tooling (pinned to resolve PYSEC-2026-3447)
+setuptools>=83.0.0
+
 # Testing framework
 pytest>=9.0.0
 pytest-cov>=7.0.0
